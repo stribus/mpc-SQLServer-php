@@ -1,8 +1,8 @@
-# CakePHP 3
-
+#PHP
+/.github
 /vendor/*
-/config/app.php
-
+/.env
+/.vscode
 /tmp/cache/models/*
 !/tmp/cache/models/empty
 /tmp/cache/persistent/*
@@ -17,9 +17,3 @@
 /logs/*
 !/logs/empty
 
-# CakePHP 2
-
-/app/tmp/*
-/app/Config/core.php
-/app/Config/database.php
-/vendors/*
