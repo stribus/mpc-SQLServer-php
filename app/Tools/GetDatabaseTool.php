@@ -9,7 +9,7 @@ use MCP\SqlServer\Interfaces\MCPToolInterface;
 use MCP\SqlServer\Interfaces\AbstractMCPTool;
 use PDO;
 
-class DatabaseTool extends AbstractMCPTool
+class GetDatabaseTool extends AbstractMCPTool
 {
 
     private PDO $pdo;
@@ -17,6 +17,13 @@ class DatabaseTool extends AbstractMCPTool
     protected string $description = 'Ferramenta para obtenção dos nomes dos bancos de dados.';
     protected ?string $title = 'Obter Bancos de Dados';
     protected array $arguments = [];
+    protected array | null | string $outputSchema = [
+        'type' => 'array',
+        'items' => [
+            'type' => 'string',
+            'description' => 'Nome dos bancos de dados'
+        ]
+    ];
 
     public function __construct() {
         $pdo = Flight::get('pdo');
@@ -29,6 +36,7 @@ class DatabaseTool extends AbstractMCPTool
     public function execute(array $arguments): array
     {
         $stmt = $this->pdo->query("SELECT name FROM sys.databases");
-        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+        $return = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        return $return;
     }
 }

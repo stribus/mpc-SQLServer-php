@@ -7,8 +7,8 @@ use MCP\SqlServer\Interfaces\AbstractMCPTool;
 use PDO;
 use Flight;
 
-class TablesTool extends AbstractMCPTool {
-    
+class GetTablesTool extends AbstractMCPTool {
+
     private PDO $pdo;
 
     protected string $name = 'get_tables';
@@ -24,7 +24,11 @@ class TablesTool extends AbstractMCPTool {
     ];
 
     public function __construct() {
-        $this->pdo = Flight::get('pdo');
+        $pdo = Flight::get('pdo');
+        if (!$pdo instanceof PDO) {
+            throw new \Exception("PDO não está configurado corretamente.", -32603);
+        }
+        $this->pdo = $pdo;
     }
 
     public function execute(array $arguments): mixed {

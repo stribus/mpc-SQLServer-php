@@ -24,30 +24,21 @@ class MCPToolRegistry {
 
     public function list(): array {
         return array_map(function($tool) {
-            $required = [];
-            $arguments = method_exists($tool, 'getArguments') ? $tool->getArguments() : [];
-            $inputSchema = [
-                'type' => 'object',
-                'properties' => []
-            ];
-            foreach ($arguments as $parameter) {
-                $inputSchema['properties'][$parameter['name']] = [
-                    'type' => $parameter['type'] ?? 'string',
-                    'description' => $parameter['description'] ?? ''
-                ];
-                if (isset($parameter['required']) && $parameter['required']) {
-                    $required[] = $parameter['name'];
-                }
-            }
+            // $required = [];
+            // $arguments = method_exists($tool, 'getArguments') ? $tool->getArguments() : [];
+            $inputSchema = $tool->getInputSchema();
+            $outputSchema = $tool->getOutputSchema();
+
 
             $return = [
                 'name' => $tool->getName(),
                 'description' => $tool->getDescription(),
-                'inputSchema' => $inputSchema,
                 'title' => $tool->getTitle() ?? $tool->getName(),
+                'inputSchema' => $inputSchema,
             ];
-            if (!empty($required)) {
-                $return['required'] = $required;
+
+            if ($outputSchema !== null) {
+                $return['outputSchema'] = $outputSchema;
             }
 
             return $return;
