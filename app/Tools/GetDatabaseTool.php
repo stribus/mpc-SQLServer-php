@@ -3,7 +3,7 @@
 namespace App\Tools;
 
 use Flight;
-use MCP\SqlServer\Interfaces\MCPResourceInterface;
+// Line removed as it is unused.
 use MCP\SqlServer\Interfaces\MCPToolInterface;
 
 use MCP\SqlServer\Interfaces\AbstractMCPTool;
