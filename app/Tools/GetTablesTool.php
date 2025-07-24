@@ -1,7 +1,6 @@
 <?php
 
 namespace MCP\SqlServer\Tools;
-use MCP\SqlServer\Interfaces\MCPToolInterface;
 use MCP\SqlServer\Interfaces\AbstractMCPTool;
 use PDO;
 use Flight;
