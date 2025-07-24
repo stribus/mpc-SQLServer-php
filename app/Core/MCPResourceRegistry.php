@@ -14,7 +14,7 @@ class MCPResourceRegistry {
     }
 
     public function get(string $schema): MCPResourceInterface {
-        if (strpos($schema, '://') !== 0) {
+        if (strpos($schema, '://') === false || strpos($schema, '://') !== 0) {
             throw new Exception("URI inválida: {$schema}", -32600);
         }
         if (strpos($schema, '://') > 0) {
