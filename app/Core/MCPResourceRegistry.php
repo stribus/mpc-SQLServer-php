@@ -18,7 +18,7 @@ class MCPResourceRegistry {
             throw new Exception("URI inválida: {$schema}", -32600);
         }
         if (strpos($schema, '://') > 0) {
-            $schema = substr($schema, strpos($schema, '://') );
+            $schema = strstr($schema, '://', true); // Extract the part before '://'
         }
         if (!isset($this->resources[strtolower($schema)])) {
             throw new Exception("Resource '{$schema}' não encontrada", -32601);
