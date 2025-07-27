@@ -64,7 +64,7 @@ class SPCodeStructureTool extends AbstractMCPTool
         $characterStart = $arguments['character_start'] ?? 0;
         $characterEnd = $arguments['character_end'] ?? 0;
 
-        if (empty($database) || empty($procedureName) || $characterStart < 0 || $characterEnd <= $characterStart) {
+        if (empty($database) || empty($procedureName) || $characterStart < 0 || $characterEnd < $characterStart) {
             throw new \InvalidArgumentException('Parâmetros inválidos fornecidos.', -32602);
         }
 
