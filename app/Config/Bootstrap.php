@@ -1,19 +1,18 @@
 <?php
 
 require_once '../vendor/autoload.php';
-require_once ABSPATH . '/app/config/config.php';
+
+require_once ABSPATH.'/app/config/config.php';
 
 use MCP\SqlServer\Config\Database;
 use MCP\SqlServer\Controllers\MCPServerController;
-use Tracy\Debugger;
-use Tracy\Bridges\Psr\TracyExtensionLoader;
 
 // Configuração do Flight
-//Flight::set('flight.views.path', './views');
+// Flight::set('flight.views.path', './views');
 
 // Get the $app var to use below
-if(empty($app)) {
-	$app = Flight::app();
+if (empty($app)) {
+    $app = Flight::app();
 }
 
 // Configuração de CORS para permitir requisições do VSCode/Copilot
@@ -23,29 +22,29 @@ $app->before('start', function () {
     header('Access-Control-Allow-Headers: Content-Type, Authorization');
     header('Content-Type: application/json');
 
-    if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    if ('OPTIONS' === $_SERVER['REQUEST_METHOD']) {
         http_response_code(200);
-        exit();
+
+        exit;
     }
 
     Database::configureAll();
 });
 
-
 // Endpoint principal para JSON-RPC 2.0
-$app->route('POST /', function ()  {
+$app->route('POST /', function () {
     try {
         $input = file_get_contents('php://input');
         $request = json_decode($input, true);
 
-        if (json_last_error() !== JSON_ERROR_NONE) {
+        if (JSON_ERROR_NONE !== json_last_error()) {
             $response = [
                 'jsonrpc' => '2.0',
                 'id' => null,
                 'error' => [
                     'code' => -32700,
-                    'message' => 'Parse error'
-                ]
+                    'message' => 'Parse error',
+                ],
             ];
             Flight::jsonHalt($response, 400);
         }
@@ -53,21 +52,20 @@ $app->route('POST /', function ()  {
         $mcpServer = new MCPServerController();
 
         $response = $mcpServer->handleRequest($request);
-        if (!isset($response['jsonrpc']) || $response['jsonrpc'] !== '2.0') {
+        if (!isset($response['jsonrpc']) || '2.0' !== $response['jsonrpc']) {
             $response = [
                 'jsonrpc' => '2.0',
                 'id' => $request['id'] ?? null,
                 'error' => [
                     'code' => -32600,
-                    'message' => 'Invalid Request'
-                ]
+                    'message' => 'Invalid Request',
+                ],
             ];
         }
         if (!isset($response['id'])) {
             $response['id'] = $request['id'] ?? null;
         }
         Flight::jsonHalt($response);
-
     } catch (Exception $e) {
         $response = [
             'jsonrpc' => '2.0',
@@ -75,8 +73,8 @@ $app->route('POST /', function ()  {
             'error' => [
                 'code' => -32603,
                 'message' => 'Internal error',
-                'data' => $e->getMessage()
-            ]
+                'data' => $e->getMessage(),
+            ],
         ];
         Flight::jsonHalt($response, 500);
     }
@@ -87,7 +85,7 @@ $app->route('GET /health', function () {
     Flight::json([
         'status' => 'healthy',
         'timestamp' => date('c'),
-        'mcp_version' => '2025-06-18'
+        'mcp_version' => '2025-06-18',
     ]);
 });
 
@@ -101,8 +99,8 @@ $app->route('GET /', function () {
         'endpoints' => [
             'POST /' => 'JSON-RPC 2.0 endpoint',
             'GET /health' => 'Health check',
-            'GET /' => 'Esta documentação'
-        ]
+            'GET /' => 'Esta documentação',
+        ],
     ]);
 });
 
@@ -113,8 +111,8 @@ $app->map('notFound', function () {
         'id' => null,
         'error' => [
             'code' => -32601,
-            'message' => 'Method not found'
-        ]
+            'message' => 'Method not found',
+        ],
     ], 404);
 });
 

@@ -2,8 +2,8 @@
 
 namespace MCP\SqlServer\Interfaces;
 
-abstract class AbstractMCPPrompt implements MCPPromptInterface {
-
+abstract class AbstractMCPPrompt implements MCPPromptInterface
+{
     protected string $name;
     protected string $description;
     protected ?string $title = null;
@@ -12,22 +12,29 @@ abstract class AbstractMCPPrompt implements MCPPromptInterface {
     public function __get($name)
     {
         if (property_exists($this, $name)) {
-            return $this->$name;
+            return $this->{$name};
         }
+
         return null;
     }
 
-    public function getName(): string {
+    public function getName(): string
+    {
         return $this->name;
     }
-    public function getTitle(): string {
+
+    public function getTitle(): string
+    {
         return $this->title ?? $this->name;
     }
-    public function getDescription(): string {
+
+    public function getDescription(): string
+    {
         return $this->description;
     }
 
-    public function getArguments(): array {
+    public function getArguments(): array
+    {
         return [];
     }
 }
