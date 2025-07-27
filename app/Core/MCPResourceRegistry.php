@@ -14,6 +14,8 @@ class MCPResourceRegistry
         $this->resources[strtolower($resource->getSchema())] = $resource;
     }
 
+
+    // retorna o recurso baseado no schema
     public function get(string $schema): MCPResourceInterface
     {
         if (0 !== strpos($schema, '://')) {
@@ -29,12 +31,12 @@ class MCPResourceRegistry
         return $this->resources[strtolower($schema)];
     }
 
-    // public function list(): array {
+    public function list(): array {
 
-    //     return array_map(fn($resource) => [
-    //         'name' => $resource->getName(),
-    //         'description' => $resource->getDescription(),
-    //         'arguments' => method_exists($resource, 'getArguments') ? $resource->getArguments() : []
-    //     ], $this->resources);
-    // }
+        return array_map(fn($resource) => [
+            'name' => $resource->getName(),
+            'description' => $resource->getDescription(),
+            'title' => $resource->getTitle() ?? $resource->getName(),
+        ], $this->resources);
+    }
 }

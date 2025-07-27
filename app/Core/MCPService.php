@@ -70,4 +70,20 @@ class MCPService
     {
         return $this->prompts->get($name)->getPromptText($context);
     }
+
+    // Verifica se há ferramentas registradas
+    public function hasTools(): bool
+    {
+        return !isset($this->tools) || !empty($this->tools->list());
+    }
+    // Verifica se há prompts registrados
+    public function hasPrompts(): bool
+    {
+        return !isset($this->prompts) || !empty($this->prompts->list());
+    }
+    // Verifica se há recursos registrados
+    public function hasResources(): bool
+    {
+        return !isset($this->resources) || !empty($this->resources->list());
+    }
 }

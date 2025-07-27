@@ -33,19 +33,32 @@ class MCPServerController
         try {
             switch ($request['method']) {
                 case 'initialize':
+                    
                     $result = [
+                        'protocolVersion' => '2024-11-05',
                         'capabilities' => [
-                            'methods' => [
-                                'initialize',
-                                'tools/list',
-                                'tools/call',
-                                'resources/list',
-                                'resources/read',
-                                'prompts/list',
-                                'prompts/get',
-                            ],
+                            
+                            // 'methods' => [
+                            //     'initialize',
+                            //     'tools/list',
+                            //     'tools/call',
+                            //     'resources/list',
+                            //     'resources/read',
+                            //     'prompts/list',
+                            //     'prompts/get',
+                            // ],
                         ],
+                        'instructions' => 'Use the MCP server to interact with SQL Server databases. Available methods: tools/list, tools/call, resources/list, resources/read, prompts/list, prompts/get.',
                     ];
+                    if ($this->service->hasPrompts()) {
+                        $result['capabilities']['prompts'] =[];
+                    }
+                    if ($this->service->hasResources()) {
+                        $result['capabilities']['resources'] = [];
+                    }
+                    if ($this->service->hasTools()) {
+                        $result['capabilities']['tools'] = [];
+                    }
 
                     break;
 
@@ -74,7 +87,6 @@ class MCPServerController
 
                 case 'prompts/list':
                     $result = $this->service->listPrompts();
-
                     break;
 
                 case 'prompts/get':
