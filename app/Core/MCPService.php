@@ -74,16 +74,16 @@ class MCPService
     // Verifica se há ferramentas registradas
     public function hasTools(): bool
     {
-        return !isset($this->tools) || !empty($this->tools->list());
+        return isset($this->tools) && !empty($this->tools->list());
     }
     // Verifica se há prompts registrados
     public function hasPrompts(): bool
     {
-        return !isset($this->prompts) || !empty($this->prompts->list());
+        return isset($this->prompts) && !empty($this->prompts->list());
     }
     // Verifica se há recursos registrados
     public function hasResources(): bool
     {
-        return !isset($this->resources) || !empty($this->resources->list());
+        return isset($this->resources) && !empty($this->resources->list());
     }
 }

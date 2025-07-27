@@ -51,7 +51,7 @@ class MCPServerController
                         'instructions' => 'Use the MCP server to interact with SQL Server databases. Available methods: tools/list, tools/call, resources/list, resources/read, prompts/list, prompts/get.',
                     ];
                     if ($this->service->hasPrompts()) {
-                        $result['capabilities']['prompts'] =[];
+                        $result['capabilities']['prompts'] = [];
                     }
                     if ($this->service->hasResources()) {
                         $result['capabilities']['resources'] = [];

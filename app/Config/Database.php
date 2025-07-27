@@ -88,10 +88,6 @@ class Database
         self::loadConfig();
         // Verifica se a configuração do servidor 'localhost' existe
         if (!isset(self::$config['localhost'])) {
-            var_dump(self::$config);
-
-            exit;
-
             throw new \Exception("Configuração do servidor 'localhost' não encontrada.");
         }
 
