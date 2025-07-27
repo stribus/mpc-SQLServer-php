@@ -3,26 +3,29 @@
 namespace MCP\SqlServer\Core;
 
 use MCP\SqlServer\Interfaces\MCPResourceInterface;
-use Exception;
 
-class MCPResourceRegistry {
+class MCPResourceRegistry
+{
     /** @var MCPResourceInterface[] */
     private array $resources = [];
 
-    public function register(MCPResourceInterface $resource): void {
+    public function register(MCPResourceInterface $resource): void
+    {
         $this->resources[strtolower($resource->getSchema())] = $resource;
     }
 
-    public function get(string $schema): MCPResourceInterface {
-        if (strpos($schema, '://') !== 0) {
-            throw new Exception("URI inválida: {$schema}", -32600);
+    public function get(string $schema): MCPResourceInterface
+    {
+        if (0 !== strpos($schema, '://')) {
+            throw new \Exception("URI inválida: {$schema}", -32600);
         }
         if (strpos($schema, '://') > 0) {
-            $schema = substr($schema, strpos($schema, '://') );
+            $schema = substr($schema, strpos($schema, '://'));
         }
         if (!isset($this->resources[strtolower($schema)])) {
-            throw new Exception("Resource '{$schema}' não encontrada", -32601);
+            throw new \Exception("Resource '{$schema}' não encontrada", -32601);
         }
+
         return $this->resources[strtolower($schema)];
     }
 

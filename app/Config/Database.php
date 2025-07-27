@@ -1,11 +1,9 @@
 <?php
 
-
 namespace MCP\SqlServer\Config;
 
-
-use Flight;
 use Dotenv\Dotenv;
+use Flight;
 
 class Database
 {
@@ -37,34 +35,14 @@ class Database
         // ]
     ];
 
-    private static function loadConfig(){
-        // Carrega a configuração do arquivo .env na raiz do projeto
-        $dotenv = Dotenv::createImmutable(ABSPATH);
-        $dotenv->load();
-        foreach ($_ENV as $key => $value){
-            if (strpos($key, 'DB_') === 0){
-                // $key = 'DB_localhost_host'
-                $parts = explode('_', $key);
-                if (count($parts) >=3){
-                    $serverName = strtolower($parts[1]);
-                    $configKey = implode('_', array_slice($parts, 2));
-                    if (!isset(self::$config[$serverName])) {
-                        self::$config[$serverName] = [];
-                    }
-                    self::$config[$serverName][$configKey] = $value;
-                }
-            }
-        }
-    }
-
     public static function getConfig($serverName)
     {
         if (isset(self::$config[$serverName])) {
             return self::$config[$serverName];
         }
+
         throw new \Exception("Configuração do servidor '{$serverName}' não encontrada.");
     }
-
 
     public static function getAllConfigs()
     {
@@ -109,9 +87,11 @@ class Database
         // por enquanto vai ser apenas o localhost
         self::loadConfig();
         // Verifica se a configuração do servidor 'localhost' existe
-        if(!isset(self::$config['localhost'])) {
+        if (!isset(self::$config['localhost'])) {
             var_dump(self::$config);
-            die;
+
+            exit;
+
             throw new \Exception("Configuração do servidor 'localhost' não encontrada.");
         }
 
@@ -122,23 +102,46 @@ class Database
                 $connection = new \PDO(
                     "sqlsrv:Server={$config['host']},{$config['port']};Database={$config['database']}",
                     null,
-                    null);
+                    null
+                );
             } else {
                 // Usar autenticação SQL Server
                 if (!isset($config['user']) || !isset($config['password'])) {
-                    throw new \Exception("Usuário e senha são necessários para autenticação SQL Server.");
+                    throw new \Exception('Usuário e senha são necessários para autenticação SQL Server.');
                 }
                 $connection = new \PDO(
                     "sqlsrv:Server={$config['host']},{$config['port']};Database={$config['database']}",
                     $config['user'],
-                    $config['password']);
+                    $config['password']
+                );
             }
             $connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
             $connection->setAttribute(\PDO::SQLSRV_ATTR_ENCODING, \PDO::SQLSRV_ENCODING_UTF8);
 
-            Flight::set('pdo', $connection);
+            \Flight::set('pdo', $connection);
         } catch (\Exception $e) {
-            throw new \Exception("Erro ao configurar o servidor 'localhost': " . $e->getMessage());
+            throw new \Exception("Erro ao configurar o servidor 'localhost': ".$e->getMessage());
+        }
+    }
+
+    private static function loadConfig()
+    {
+        // Carrega a configuração do arquivo .env na raiz do projeto
+        $dotenv = Dotenv::createImmutable(ABSPATH);
+        $dotenv->load();
+        foreach ($_ENV as $key => $value) {
+            if (0 === strpos($key, 'DB_')) {
+                // $key = 'DB_localhost_host'
+                $parts = explode('_', $key);
+                if (count($parts) >= 3) {
+                    $serverName = strtolower($parts[1]);
+                    $configKey = implode('_', array_slice($parts, 2));
+                    if (!isset(self::$config[$serverName])) {
+                        self::$config[$serverName] = [];
+                    }
+                    self::$config[$serverName][$configKey] = $value;
+                }
+            }
         }
     }
 }
