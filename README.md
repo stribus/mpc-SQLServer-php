@@ -37,31 +37,34 @@ Este projeto implementa um servidor MCP (Model Context Protocol) em PHP que exp�
 
 ```estrutura
 projeto/
-├── app/                          # Código fonte do servidor MCP
-│   ├── Config/                   # Configurações do servidor
-│   │   ├── Bootstrap.php         # Inicialização do servidor
-│   │   ├── Config.php            # Configurações gerais
-│   │   └── Database.php          # Configurações do banco de dados
-│   ├── Controllers/              # Controladores do FlightPHP
+├── app/                            # Código fonte do servidor MCP
+│   ├── Config/                     # Configurações do servidor
+│   │   ├── Bootstrap.php           # Inicialização do servidor
+│   │   ├── Config.php              # Configurações gerais
+│   │   └── Database.php            # Configurações do banco de dados
+│   ├── Controllers/                # Controladores do FlightPHP
 │   │   └── MCPServerController.php # Servidor MCP principal
-│   ├── Core/                     # Núcleo do MCP (registries, helpers, etc.)
-│   ├── Helpers/                  # Funções utilitárias
-│   ├── Interfaces/               # Interfaces e classes abstratas
-│   ├── Models/                   # Modelos de dados
-│   ├── Prompts/                  # Prompts MCP
-│   ├── Resources/                # Recursos MCP (ex: SQLResource)
-│   └── Tools/                    # Ferramentas MCP (ex: TablesTool)
-├── public/                       # Diretório público para o IIS
-│   ├── web.config                # Configuração do IIS
-│   └── index.php                 # Ponto de entrada principal
-├── vendor/                       # Dependências do Composer
-├── composer.json                 # Dependências do projeto
-├── composer.lock                 # Lockfile do Composer
-├── test/                         # Testes unitários e cliente de teste
-│   └── test_client.php           # Cliente de teste
-├── extras/                       # Arquivos extras
-│   └── mcp_config.json           # Configuração para VSCode
-└── logs/                         # Logs do sistema (criar manualmente)
+│   ├── Core/                       # Núcleo do MCP (registries, etc.)
+│   │   ├── MCPService.php          # Classe principal do MCP
+│   │   ├── MCPPromptRegistry.php   # Registro de prompts MCP
+│   │   ├── MCPResourceRegistry.php # Registro de recursos MCP
+│   │   └── MCPToolRegistry.php     # Registro de ferramentas MCP
+│   ├── Helpers/                    # Funções utilitárias
+│   ├── Interfaces/                 # Interfaces e classes abstratas
+│   ├── Prompts/                    # Prompts MCP
+│   ├── Resources/                  # Recursos MCP (ex: SQLResource)
+│   └── Tools/                      # Ferramentas MCP (ex: TablesTool)
+├── public/                         # Diretório público para o IIS
+│   ├── web.config                  # Configuração do IIS
+│   └── index.php                   # Ponto de entrada principal
+├── vendor/                         # Dependências do Composer
+├── composer.json                   # Dependências do projeto
+├── composer.lock                   # Lockfile do Composer
+├── test/                           # Testes unitários e cliente de teste
+│   └── test_client.php             # Cliente de teste
+├── extras/                         # Arquivos extras
+│   └── mcp_config.json             # Configuração para VSCode
+└── logs/                           # Logs do sistema (criar manualmente)
 ```
 
 ## 🔧 Instalação e Configuração
@@ -82,12 +85,19 @@ composer install
 
 ### 3. Configuração do Banco de Dados
 
-Edite o arquivo `.env` ou `config/database.php` para definir as credenciais do SQL Server:
+Edite o arquivo `.env` (na raiz) ou `app/Config/Database.php` para definir as credenciais do SQL Server. Exemplo de `.env`:
 
-```.env
-DB_SERVER=localhost
-DB_USERNAME=sa
-DB_PASSWORD=sua_senha_aqui
+```env
+# Autenticação Windows (Integrated Security)
+DB_localhost_host=localhost
+DB_localhost_database=AdventureWorksLT2019
+DB_localhost_integratedSecurity=true
+
+# Autenticação SQL Server
+DB_localhost_host=localhost
+DB_localhost_database=AdventureWorksLT2019
+DB_localhost_user=sa
+DB_localhost_password=S3nh@F0rt3
 ```
 
 ### 4. Configuração do IIS
@@ -249,6 +259,6 @@ Este projeto está licenciado sob a MIT License.
 
 Para dúvidas ou problemas:
 
-- Execute `php test_client.php` para diagnóstico
+- Execute `php test/test_client.php` para diagnóstico
 - Verifique os logs do IIS
 - Consulte a documentação oficial do MCP: [https://modelcontextprotocol.io/](https://modelcontextprotocol.io/)
